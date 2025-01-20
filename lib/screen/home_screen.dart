@@ -1,6 +1,5 @@
 import 'package:echo/bloc/cubit/app_cubit.dart';
 import 'package:echo/controller/home_controller.dart';
-import 'package:echo/screen/chats_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,7 +33,7 @@ class HomeScreen extends StatelessWidget {
                   color: Theme.of(context).colorScheme.onSecondary,
                 ),
               ),
-              body: ChatsScreen(),
+              body: controller.bodies[currentIndex],
               bottomNavigationBar: BottomNavigationBar(
                   onTap: (val) =>
                       controller.selectedIndex.setState(newState: val),

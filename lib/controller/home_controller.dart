@@ -1,5 +1,6 @@
 import 'package:echo/bloc/cubit/app_cubit.dart';
 import 'package:echo/screen/chats_screen.dart';
+import 'package:echo/screen/contacts_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeController {
@@ -13,5 +14,5 @@ class HomeController {
     Icons.settings_outlined
   ];
 
-  final List<Widget> bodies = [ChatsScreen(), ChatsScreen(), ChatsScreen()];
+  final List<Widget> bodies = [ChatsScreen(), ContactsScreen(), ChatsScreen()];
 }
