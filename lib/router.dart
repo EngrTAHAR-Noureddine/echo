@@ -1,4 +1,5 @@
 import 'package:echo/constant/screen_routes.dart';
+import 'package:echo/screen/chat_screen.dart';
 import 'package:echo/screen/home_screen.dart';
 import 'package:echo/screen/login_screen.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,11 @@ class RouterGenerator {
         return MaterialPageRoute(
           settings: RouteSettings(name: routeSettings.name),
           builder: (context) => HomeScreen(),
+        );
+      case NavigationRoutes.chat:
+        return MaterialPageRoute(
+          settings: RouteSettings(name: routeSettings.name),
+          builder: (context) => ChatScreen(),
         );
       case NavigationRoutes.login:
         return MaterialPageRoute(
