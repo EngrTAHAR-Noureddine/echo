@@ -69,7 +69,8 @@ class LoginScreen extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              Navigator.pushNamed(context, NavigationRoutes.home);
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  NavigationRoutes.home, (route) => route.isFirst);
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,

@@ -24,7 +24,7 @@ class CustomTheme {
       primaryFixedDim: AppColor.white,
 
       secondary: AppColor.lightOrange,
-      onSecondary: AppColor.white,
+      onSecondary: AppColor.dark,
 
       secondaryContainer: AppColor.lightGreen,
       onSecondaryContainer: AppColor.white,
@@ -56,8 +56,10 @@ class CustomTheme {
     splashColor: Colors.transparent,
     focusColor: Colors.transparent,
     hoverColor: Colors.transparent,
-    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      backgroundColor: Colors.transparent,
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      backgroundColor: AppColor.white,
+      selectedItemColor: AppColor.lightBlue,
+      unselectedItemColor: AppColor.lightGrey03,
     ),
     inputDecorationTheme: InputDecorationTheme(
       fillColor: AppColor.white, //Colors.white,

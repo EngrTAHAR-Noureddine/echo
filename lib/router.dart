@@ -17,7 +17,7 @@ class RouterGenerator {
       case NavigationRoutes.home:
         return MaterialPageRoute(
           settings: RouteSettings(name: routeSettings.name),
-          builder: (context) => const HomeScreen(),
+          builder: (context) => HomeScreen(),
         );
       case NavigationRoutes.login:
         return MaterialPageRoute(
