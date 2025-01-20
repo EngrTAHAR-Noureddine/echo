@@ -4,12 +4,15 @@ import 'package:echo/constant/enums.dart';
 import 'package:echo/data/hivebase.dart';
 import 'package:echo/router.dart';
 import 'package:echo/screen/home_screen.dart';
+import 'package:echo/screen/login_screen.dart';
 import 'package:echo/style/theme.dart';
 import 'package:echo/translation/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await HiveBase.init();
   runApp(const MyApp());
 }
 
@@ -33,7 +36,9 @@ class MyApp extends StatelessWidget {
               title: 'Echo',
               debugShowCheckedModeBanner: false,
               theme: CustomTheme.of.lightMode,
-              home: const HomeScreen(),
+              home: (HiveBase.hiveBase.getToken() != null)
+                  ? HomeScreen()
+                  : LoginScreen(),
               navigatorKey: navigatorKey,
               onGenerateRoute: RouterGenerator.getRouter,
             );
