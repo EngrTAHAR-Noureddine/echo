@@ -1,5 +1,5 @@
 class Chat {
-  final String id;
+  final String? id;
   final String sender;
   final String receiver;
   final String message;
@@ -8,7 +8,7 @@ class Chat {
   final DateTime dateTime;
 
   Chat(
-      {required this.id,
+      {this.id,
       required this.sender,
       required this.receiver,
       required this.message,
@@ -22,9 +22,9 @@ class Chat {
       sender: map['sender'],
       receiver: map['receiver'],
       message: map['message'],
-      isRead: map['isRead'],
+      isRead: map['isRead'] == "true",
       dateTime: DateTime.parse(map['dateTime']),
-      isDelivered: map['isDelivered'],
+      isDelivered: map['isDelivered'] == "true",
     );
   }
 
@@ -33,8 +33,8 @@ class Chat {
         "sender": sender,
         "receiver": receiver,
         "message": message,
-        "isRead": isRead,
+        "isRead": "$isRead",
         "dateTime": dateTime.toIso8601String(),
-        "isDelivered": isDelivered
+        "isDelivered": "$isDelivered"
       };
 }

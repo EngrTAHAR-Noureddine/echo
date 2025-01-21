@@ -1,6 +1,5 @@
 import 'package:echo/model/chat.dart';
 import 'package:echo/service/firestore_service.dart';
-import 'package:echo/utils/app_singleton.dart';
 
 class ChatRepository {
   final FirestoreService _service = FirestoreService();
@@ -13,7 +12,6 @@ class ChatRepository {
   }
 
   Stream<List<Chat>> getOwnMessages() async* {
-    yield* _service.getMessages(
-        receiverId: AppSingleton.instance.user?.id ?? "");
+    yield* _service.getOwnMessages();
   }
 }

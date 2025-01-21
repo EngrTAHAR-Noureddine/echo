@@ -10,7 +10,8 @@ class ContactTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
-        Navigator.of(context).pushNamed(NavigationRoutes.chat);
+        Navigator.of(context)
+            .pushNamed(NavigationRoutes.chat, arguments: user.id);
       },
       leading: CircleAvatar(
         backgroundColor: user.isActive

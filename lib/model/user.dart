@@ -17,14 +17,14 @@ class User {
         id: map['id'],
         displayName: map['displayName'],
         email: map['email'],
-        isActive: map['isActive']);
+        isActive: map['isActive'] == "true");
   }
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "displayName": displayName,
         "email": email,
-        "isActive": isActive
+        "isActive": "$isActive"
       };
 }
 

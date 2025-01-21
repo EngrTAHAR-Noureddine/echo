@@ -23,7 +23,9 @@ class RouterGenerator {
       case NavigationRoutes.chat:
         return MaterialPageRoute(
           settings: RouteSettings(name: routeSettings.name),
-          builder: (context) => ChatScreen(),
+          builder: (context) => ChatScreen(
+            receiverId: routeSettings.arguments as String,
+          ),
         );
       case NavigationRoutes.login:
         return MaterialPageRoute(

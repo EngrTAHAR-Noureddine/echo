@@ -14,6 +14,6 @@ class ChatError extends ChatState {
 class ChatSentSuccessfully extends ChatState {}
 
 class ChatsSuccess extends ChatState {
-  final List<Chat> chats;
-  ChatsSuccess({required this.chats});
+  final List<ReceiverMessages> receiverMessages;
+  ChatsSuccess({required this.receiverMessages});
 }

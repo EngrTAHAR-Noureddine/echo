@@ -24,7 +24,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       String token = await _authRepository.signInWithEmailAndPassword(
           event.email, event.password);
-      User user = await _userRepository.getUser(id: token);
+      User user = await _userRepository.getOwnUser(id: token);
       AppSingleton.instance.setUser = user;
 
       emit(AuthSuccess());
@@ -61,7 +61,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoading());
     try {
       String? token = await _authRepository.currentUserToken();
-      User user = await _userRepository.getUser(
+      User user = await _userRepository.getOwnUser(
           id: token ?? HiveBase.hiveBase.getToken() ?? "");
       AppSingleton.instance.setUser = user;
 

@@ -12,13 +12,18 @@ class UserRepository {
           required String displayName}) async =>
       await _service.createUser(id: id, email: email, displayName: displayName);
 
-  Future<User> getUser({required String id}) async {
-    User user = await _service.getUser(id: id);
+  Future<User> getOwnUser({required String id}) async {
+    User user = await getUser(id: id);
 
     await HiveBase.hiveBase.setUser(user);
 
     await setIsActive();
 
+    return user;
+  }
+
+  Future<User> getUser({required String id}) async {
+    User user = await _service.getUser(id: id);
     return user;
   }
 
