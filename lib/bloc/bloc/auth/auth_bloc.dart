@@ -1,17 +1,16 @@
-import 'package:bloc/bloc.dart';
 import 'package:echo/data/hivebase.dart';
 import 'package:echo/model/user.dart';
 import 'package:echo/repository/fire_auth_repository.dart';
-import 'package:echo/repository/firestore_repository.dart';
+import 'package:echo/repository/user_repository.dart';
 import 'package:echo/utils/app_singleton.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository = AuthRepository();
-  final FirestoreRepository _firestoreRepository = FirestoreRepository();
+  final UserRepository _userRepository = UserRepository();
 
   AuthBloc() : super(AuthInitial()) {
     on<SignInEvent>(_signIn);
@@ -25,7 +24,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       String token = await _authRepository.signInWithEmailAndPassword(
           event.email, event.password);
-      User user = await _firestoreRepository.getUser(id: token);
+      User user = await _userRepository.getUser(id: token);
       AppSingleton.instance.setUser = user;
 
       emit(AuthSuccess());
@@ -38,7 +37,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoading());
     try {
       String token = await _authRepository.signUp(event.email, event.password);
-      String _ = await _firestoreRepository.createUser(
+      String _ = await _userRepository.createUser(
           id: token, email: event.email, displayName: event.displayName);
       emit(AuthSuccess());
     } catch (e) {
@@ -62,7 +61,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoading());
     try {
       String? token = await _authRepository.currentUserToken();
-      User user = await _firestoreRepository.getUser(
+      User user = await _userRepository.getUser(
           id: token ?? HiveBase.hiveBase.getToken() ?? "");
       AppSingleton.instance.setUser = user;
 

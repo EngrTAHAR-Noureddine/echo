@@ -11,7 +11,7 @@ class AuthRepository {
       if (token == null) {
         throw "Invalid credentials";
       }
-      HiveBase.hiveBase.setToken(token);
+      await HiveBase.hiveBase.setToken(token);
       return token;
     } catch (e) {
       throw e.toString();
@@ -22,7 +22,7 @@ class AuthRepository {
     try {
       String? token = await _authService.currentUserToken();
       if (token != null) {
-        HiveBase.hiveBase.setToken(token);
+        await HiveBase.hiveBase.setToken(token);
       }
       return token;
     } catch (e) {
@@ -38,7 +38,7 @@ class AuthRepository {
       if (token == null) {
         throw "Invalid credentials";
       }
-      HiveBase.hiveBase.setToken(token);
+      await HiveBase.hiveBase.setToken(token);
       return token;
     } catch (e) {
       throw e.toString();
