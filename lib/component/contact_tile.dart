@@ -1,8 +1,10 @@
 import 'package:echo/constant/screen_routes.dart';
+import 'package:echo/model/user.dart';
 import 'package:flutter/material.dart';
 
 class ContactTile extends StatelessWidget {
-  const ContactTile({super.key});
+  final User user;
+  const ContactTile({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -11,10 +13,12 @@ class ContactTile extends StatelessWidget {
         Navigator.of(context).pushNamed(NavigationRoutes.chat);
       },
       leading: CircleAvatar(
-        backgroundColor: Colors.grey,
+        backgroundColor: user.isActive
+            ? Theme.of(context).colorScheme.secondaryContainer
+            : Theme.of(context).indicatorColor,
       ),
       title: Text(
-        "User User",
+        user.displayName,
         style: Theme.of(context).textTheme.displayMedium,
       ),
     );
