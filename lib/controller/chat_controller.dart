@@ -24,6 +24,7 @@ class ChatController {
   late MainState<bool> isActive;
   String? tokenReceiver;
   final TextEditingController messageController = TextEditingController();
+  final FocusNode messageFocus = FocusNode();
 
   void getMessages() => chatBloc.add(GetMessagesEvent(receiverId: receiverId));
 

@@ -9,6 +9,16 @@ class LoginController {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController displayNameController = TextEditingController();
 
+  final FocusNode emailNode = FocusNode();
+  final FocusNode passwordNode = FocusNode();
+  final FocusNode displayNameNode = FocusNode();
+
+  void unFocus() {
+    emailNode.unfocus();
+    passwordNode.unfocus();
+    displayNameNode.unfocus();
+  }
+
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
