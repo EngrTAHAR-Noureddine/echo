@@ -1,5 +1,6 @@
 import 'package:echo/data/hivebase.dart';
 import 'package:echo/service/fire_auth_service.dart';
+import 'package:echo/service/fire_message_service.dart';
 
 class AuthRepository {
   final FireAuthService _authService = FireAuthService();
@@ -48,6 +49,8 @@ class AuthRepository {
   Future<void> signOut() async {
     try {
       await _authService.signOut();
+      await FireMessageService.instance.unSubscribeToTopic();
+      await HiveBase.hiveBase.setting.clear();
     } catch (e) {
       throw e.toString();
     }
