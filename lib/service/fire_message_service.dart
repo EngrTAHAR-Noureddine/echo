@@ -29,7 +29,7 @@ class FireMessageService {
 
   Future<void> init() async {
     await _messaging.setAutoInitEnabled(true);
-    NotificationSettings settings = await _messaging.requestPermission(
+    NotificationSettings _ = await _messaging.requestPermission(
       alert: true,
       announcement: false,
       badge: true,

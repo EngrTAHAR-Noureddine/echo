@@ -54,7 +54,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     try {
       Stream<List<Chat>> chatStream = event.receiverId != null
           ? _chatRepository.getMessages(receiverId: event.receiverId!)
-          : _chatRepository.getOwnMessages();
+          : _chatRepository.getMyMessages();
       _chatSubscription = chatStream.listen((chats) async {
         List<ReceiverMessages> receiverMessages =
             chats.convertChatsToReceiverMessages;

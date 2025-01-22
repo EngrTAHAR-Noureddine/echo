@@ -31,21 +31,17 @@ class FirestoreService {
 
   Future<User> getUser({required String id}) async {
     try {
-      // print("getUser : id = $id");
       QuerySnapshot querySnapshot = await _db
           .collection(Collection.users.name)
           .where('id', isEqualTo: id)
           .get();
-      // print("querySnapshot.docs.isNotEmpty = ${querySnapshot.docs.isNotEmpty}");
       if (querySnapshot.docs.isNotEmpty) {
         DocumentSnapshot snapshot = querySnapshot.docs.first;
-        // print("snapshot = ${snapshot.id}");
         Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
         User user = User.fromMap(data);
         User newUser = user.copy(
             activate:
                 (AppSingleton.instance.user?.id == user.id) ? true : null);
-        // print("user is activate : ${user.isActive}");
         if (!user.isActive) {
           await querySnapshot.docs.first.reference.update(newUser.toJson());
         }
@@ -80,11 +76,7 @@ class FirestoreService {
           .where('sender', whereIn: [receiverId, ownerId]).where('receiver',
               whereIn: [receiverId, ownerId]).snapshots();
 
-      // Combine streams using merge
-      final mergedStream =
-          stream; //ConcatEagerStream([receiverStream, senderStream]);
-      // Listen to the merged stream and process documents
-      await for (final querySnapshot in mergedStream) {
+      await for (final querySnapshot in stream) {
         final List<DocumentSnapshot> allDocs = querySnapshot.docs;
         if (allDocs.isNotEmpty) {
           List<Chat> messages = [];
@@ -106,12 +98,11 @@ class FirestoreService {
       }
       yield [];
     } catch (e) {
-      // throw e.toString();
       yield [];
     }
   }
 
-  Stream<List<Chat>> getOwnMessages() async* {
+  Stream<List<Chat>> getMyMessages() async* {
     try {
       final CollectionReference chatCollection =
           FirebaseFirestore.instance.collection(Collection.chat.name);
@@ -145,17 +136,9 @@ class FirestoreService {
           messages.sort((a, b) => b.dateTime.compareTo(a.dateTime));
           yield messages; // Yield the processed list of Chat objects
         }
-        // if (allDocs.isNotEmpty) {
-        //   final messages = allDocs
-        //       .map((doc) => Chat.fromMap(doc.data() as Map<String, dynamic>))
-        //       .toList();
-        //   messages.sort((a, b) => b.dateTime.compareTo(a.dateTime));
-        //   yield messages; // Yield the processed list of Chat objects
-        // }
       }
       yield [];
     } catch (e) {
-      // throw e.toString();
       yield [];
     }
   }

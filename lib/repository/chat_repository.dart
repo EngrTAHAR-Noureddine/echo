@@ -19,7 +19,7 @@ class ChatRepository {
     yield* _service.getMessages(receiverId: receiverId);
   }
 
-  Stream<List<Chat>> getOwnMessages() async* {
-    yield* _service.getOwnMessages();
+  Stream<List<Chat>> getMyMessages() async* {
+    yield* _service.getMyMessages();
   }
 }
