@@ -102,7 +102,8 @@ class ChatScreen extends StatelessWidget {
                           receiverMessages.first.receiver);
                   controller.isActive.setState(
                       newState: receiverMessages.first.user?.isActive == true);
-
+                  controller.tokenReceiver =
+                      receiverMessages.first.user?.fcmToken;
                   return SingleChildScrollView(
                     reverse: true,
                     child: Column(

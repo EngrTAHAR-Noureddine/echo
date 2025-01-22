@@ -4,7 +4,8 @@ abstract class ChatEvent {}
 
 class SendMessageEvent extends ChatEvent {
   final Chat message;
-  SendMessageEvent({required this.message});
+  final String tokenReceiver;
+  SendMessageEvent({required this.message, required this.tokenReceiver});
 }
 
 class GetMessagesEvent extends ChatEvent {

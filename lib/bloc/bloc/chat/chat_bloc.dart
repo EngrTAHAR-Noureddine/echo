@@ -34,7 +34,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       SendMessageEvent event, Emitter<ChatState> emit) async {
     emit(ChatLoading());
     try {
-      bool _ = await _chatRepository.sendMessage(message: event.message);
+      bool _ = await _chatRepository.sendMessage(
+          message: event.message, tokenReceiver: event.tokenReceiver);
       emit(ChatSentSuccessfully());
     } catch (e) {
       emit(ChatError(message: e.toString()));

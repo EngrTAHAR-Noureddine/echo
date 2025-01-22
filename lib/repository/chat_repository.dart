@@ -4,8 +4,16 @@ import 'package:echo/service/firestore_service.dart';
 class ChatRepository {
   final FirestoreService _service = FirestoreService();
 
-  Future<bool> sendMessage({required Chat message}) async =>
-      _service.sendMessage(message: message);
+  Future<bool> sendMessage(
+      {required tokenReceiver, required Chat message}) async {
+    bool isSent = await _service.sendMessage(message: message);
+    // if (isSent) {
+    //   FireMessageService.instance
+    //       .sendMessage(tokenReceiver: tokenReceiver, chat: message);
+    // }
+
+    return isSent;
+  }
 
   Stream<List<Chat>> getMessages({required String receiverId}) async* {
     yield* _service.getMessages(receiverId: receiverId);

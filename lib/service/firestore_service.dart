@@ -11,10 +11,12 @@ class FirestoreService {
   Future<String> createUser(
       {required String id,
       required String email,
+      required String? fcmToken,
       required String displayName}) async {
     try {
       final user = <String, String>{
         "displayName": displayName,
+        "fcmToken": fcmToken ?? "",
         "email": email,
         "id": id
       };
@@ -56,58 +58,6 @@ class FirestoreService {
       throw e.toString();
     }
   }
-
-  // Future<bool> setIsReadIt({required Chat message}) async {
-  //   try {
-  //     QuerySnapshot snapshot = await FirebaseFirestore.instance
-  //         .collection(Collection.chat.name)
-  //         .where('id', isEqualTo: message.id)
-  //         .get();
-  //
-  //     DocumentReference userDocRef = snapshot.docs.first.reference;
-  //
-  //     Chat newChat = Chat(
-  //         message: message.message,
-  //         dateTime: message.dateTime,
-  //         isDelivered: message.isDelivered,
-  //         isRead: true,
-  //         receiver: message.receiver,
-  //         sender: message.sender,
-  //         id: message.id);
-  //
-  //     await userDocRef.update(newChat.toJson());
-  //
-  //     return true;
-  //   } catch (_) {
-  //     return false;
-  //   }
-  // }
-  //
-  // Future<bool> setIsDeliveredIt({required Chat message}) async {
-  //   try {
-  //     QuerySnapshot snapshot = await FirebaseFirestore.instance
-  //         .collection(Collection.chat.name)
-  //         .where('id', isEqualTo: message.id)
-  //         .get();
-  //
-  //     DocumentReference userDocRef = snapshot.docs.first.reference;
-  //
-  //     Chat newChat = Chat(
-  //         message: message.message,
-  //         dateTime: message.dateTime,
-  //         isDelivered: true,
-  //         isRead: message.isRead,
-  //         receiver: message.receiver,
-  //         sender: message.sender,
-  //         id: message.id);
-  //
-  //     await userDocRef.update(newChat.toJson());
-  //
-  //     return true;
-  //   } catch (_) {
-  //     return false;
-  //   }
-  // }
 
   Future<bool> sendMessage({required Chat message}) async {
     try {

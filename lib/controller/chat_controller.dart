@@ -22,6 +22,7 @@ class ChatController {
   final ChatBloc sendChatBloc = ChatBloc();
   late MainState<String> nameReceiver;
   late MainState<bool> isActive;
+  String? tokenReceiver;
   final TextEditingController messageController = TextEditingController();
 
   void getMessages() => chatBloc.add(GetMessagesEvent(receiverId: receiverId));
@@ -31,6 +32,7 @@ class ChatController {
         "messageController.text.isNotEmpty : ${messageController.text.isNotEmpty}");
     if (messageController.text.isNotEmpty) {
       sendChatBloc.add(SendMessageEvent(
+          tokenReceiver: tokenReceiver ?? "",
           message: Chat(
               sender: "${AppSingleton.instance.user?.id}",
               receiver: receiverId,

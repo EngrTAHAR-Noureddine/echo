@@ -5,17 +5,20 @@ class User {
   final String displayName;
   final String email;
   final bool isActive;
+  final String? fcmToken;
 
   User(
       {required this.id,
       required this.email,
       required this.displayName,
+      required this.fcmToken,
       required this.isActive});
 
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
         id: map['id'],
         displayName: map['displayName'],
+        fcmToken: map['fcmToken'],
         email: map['email'],
         isActive: map['isActive'] == "true");
   }
@@ -24,10 +27,12 @@ class User {
         "id": id,
         "displayName": displayName,
         "email": email,
+        "fcmToken": fcmToken,
         "isActive": "$isActive"
       };
 
   User copy({bool? activate}) => User(
+      fcmToken: fcmToken,
       id: id,
       email: email,
       displayName: displayName,
@@ -44,7 +49,8 @@ class UserAdapter extends TypeAdapter<User> {
         id: reader.read(),
         email: reader.read(),
         displayName: reader.read(),
-        isActive: reader.read());
+        isActive: reader.read(),
+        fcmToken: reader.read());
   }
 
   @override
@@ -53,6 +59,7 @@ class UserAdapter extends TypeAdapter<User> {
       ..write(obj.id)
       ..write(obj.email)
       ..write(obj.displayName)
-      ..write(obj.isActive);
+      ..write(obj.isActive)
+      ..write(obj.fcmToken);
   }
 }

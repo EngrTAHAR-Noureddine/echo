@@ -38,7 +38,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       String token = await _authRepository.signUp(event.email, event.password);
       String _ = await _userRepository.createUser(
-          id: token, email: event.email, displayName: event.displayName);
+          fcmToken: event.fcmToken,
+          id: token,
+          email: event.email,
+          displayName: event.displayName);
       emit(AuthSuccess());
     } catch (e) {
       emit(AuthError(message: e.toString()));

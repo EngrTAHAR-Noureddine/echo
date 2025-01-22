@@ -9,8 +9,10 @@ class UserRepository {
   Future<String> createUser(
           {required String id,
           required String email,
+          required String? fcmToken,
           required String displayName}) async =>
-      await _service.createUser(id: id, email: email, displayName: displayName);
+      await _service.createUser(
+          id: id, email: email, displayName: displayName, fcmToken: fcmToken);
 
   Future<User> getOwnUser({required String id}) async {
     User user = await getUser(id: id);

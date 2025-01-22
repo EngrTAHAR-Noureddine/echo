@@ -5,6 +5,7 @@ import 'package:echo/data/hivebase.dart';
 import 'package:echo/router.dart';
 import 'package:echo/screen/home_screen.dart';
 import 'package:echo/screen/login_screen.dart';
+import 'package:echo/service/fire_message_service.dart';
 import 'package:echo/style/theme.dart';
 import 'package:echo/translation/main.dart';
 import 'package:echo/utils/app_singleton.dart';
@@ -22,6 +23,9 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  await FireMessageService.instance.init();
+  await FireMessageService.instance.setup();
   runApp(const MyApp());
 }
 
