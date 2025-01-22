@@ -29,16 +29,26 @@ class FirestoreService {
 
   Future<User> getUser({required String id}) async {
     try {
+      // print("getUser : id = $id");
       QuerySnapshot querySnapshot = await _db
           .collection(Collection.users.name)
           .where('id', isEqualTo: id)
           .get();
-
+      // print("querySnapshot.docs.isNotEmpty = ${querySnapshot.docs.isNotEmpty}");
       if (querySnapshot.docs.isNotEmpty) {
         DocumentSnapshot snapshot = querySnapshot.docs.first;
+        // print("snapshot = ${snapshot.id}");
         Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+        User user = User.fromMap(data);
+        User newUser = user.copy(
+            activate:
+                (AppSingleton.instance.user?.id == user.id) ? true : null);
+        // print("user is activate : ${user.isActive}");
+        if (!user.isActive) {
+          await querySnapshot.docs.first.reference.update(newUser.toJson());
+        }
 
-        return User.fromMap(data);
+        return newUser;
       } else {
         throw "User not found";
       }
@@ -47,28 +57,57 @@ class FirestoreService {
     }
   }
 
-  Future<bool> setIsActive({required User user}) async {
-    try {
-      QuerySnapshot snapshot = await FirebaseFirestore.instance
-          .collection(Collection.users.name)
-          .where('id', isEqualTo: user.id)
-          .get();
-
-      DocumentReference userDocRef = snapshot.docs.first.reference;
-
-      User newUser = User(
-          id: user.id,
-          email: user.email,
-          displayName: user.displayName,
-          isActive: true);
-
-      await userDocRef.update(newUser.toJson());
-
-      return true;
-    } catch (e) {
-      throw e.toString();
-    }
-  }
+  // Future<bool> setIsReadIt({required Chat message}) async {
+  //   try {
+  //     QuerySnapshot snapshot = await FirebaseFirestore.instance
+  //         .collection(Collection.chat.name)
+  //         .where('id', isEqualTo: message.id)
+  //         .get();
+  //
+  //     DocumentReference userDocRef = snapshot.docs.first.reference;
+  //
+  //     Chat newChat = Chat(
+  //         message: message.message,
+  //         dateTime: message.dateTime,
+  //         isDelivered: message.isDelivered,
+  //         isRead: true,
+  //         receiver: message.receiver,
+  //         sender: message.sender,
+  //         id: message.id);
+  //
+  //     await userDocRef.update(newChat.toJson());
+  //
+  //     return true;
+  //   } catch (_) {
+  //     return false;
+  //   }
+  // }
+  //
+  // Future<bool> setIsDeliveredIt({required Chat message}) async {
+  //   try {
+  //     QuerySnapshot snapshot = await FirebaseFirestore.instance
+  //         .collection(Collection.chat.name)
+  //         .where('id', isEqualTo: message.id)
+  //         .get();
+  //
+  //     DocumentReference userDocRef = snapshot.docs.first.reference;
+  //
+  //     Chat newChat = Chat(
+  //         message: message.message,
+  //         dateTime: message.dateTime,
+  //         isDelivered: true,
+  //         isRead: message.isRead,
+  //         receiver: message.receiver,
+  //         sender: message.sender,
+  //         id: message.id);
+  //
+  //     await userDocRef.update(newChat.toJson());
+  //
+  //     return true;
+  //   } catch (_) {
+  //     return false;
+  //   }
+  // }
 
   Future<bool> sendMessage({required Chat message}) async {
     try {
@@ -98,16 +137,27 @@ class FirestoreService {
       await for (final querySnapshot in mergedStream) {
         final List<DocumentSnapshot> allDocs = querySnapshot.docs;
         if (allDocs.isNotEmpty) {
-          final messages = allDocs
-              .map((doc) => Chat.fromMap(doc.data() as Map<String, dynamic>))
-              .toList();
+          List<Chat> messages = [];
+          for (var doc in allDocs) {
+            Chat chat = Chat.fromMap(doc.data() as Map<String, dynamic>);
+            if (chat.receiver == ownerId &&
+                chat.sender == receiverId &&
+                !chat.isRead) {
+              Chat newChat = chat.copy(deliveredIt: true, readIt: true);
+              await doc.reference.update(newChat.toJson());
+              messages.add(newChat);
+            } else {
+              messages.add(chat);
+            }
+          }
           messages.sort((a, b) => b.dateTime.compareTo(a.dateTime));
           yield messages; // Yield the processed list of Chat objects
         }
       }
       yield [];
     } catch (e) {
-      throw e.toString();
+      // throw e.toString();
+      yield [];
     }
   }
 
@@ -131,51 +181,34 @@ class FirestoreService {
       await for (final querySnapshot in streams) {
         final List<DocumentSnapshot> allDocs = querySnapshot.docs;
         if (allDocs.isNotEmpty) {
-          final messages = allDocs
-              .map((doc) => Chat.fromMap(doc.data() as Map<String, dynamic>))
-              .toList();
+          List<Chat> messages = [];
+          for (var doc in allDocs) {
+            Chat chat = Chat.fromMap(doc.data() as Map<String, dynamic>);
+            if (chat.receiver == ownerId && !chat.isDelivered) {
+              Chat newChat = chat.copy(deliveredIt: true, readIt: null);
+              await doc.reference.update(newChat.toJson());
+              messages.add(newChat);
+            } else {
+              messages.add(chat);
+            }
+          }
           messages.sort((a, b) => b.dateTime.compareTo(a.dateTime));
           yield messages; // Yield the processed list of Chat objects
         }
+        // if (allDocs.isNotEmpty) {
+        //   final messages = allDocs
+        //       .map((doc) => Chat.fromMap(doc.data() as Map<String, dynamic>))
+        //       .toList();
+        //   messages.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+        //   yield messages; // Yield the processed list of Chat objects
+        // }
       }
+      yield [];
     } catch (e) {
-      throw e.toString();
+      // throw e.toString();
+      yield [];
     }
   }
-
-  // Future<List<Chat>> getMessages({required String receiverId}) async {
-  //   try {
-  //     final CollectionReference chatCollection =
-  //         FirebaseFirestore.instance.collection(Collection.chat.name);
-  //
-  //     // Query where receiver is the userId
-  //     final QuerySnapshot receiverQuery =
-  //         await chatCollection.where('receiver', isEqualTo: receiverId).get();
-  //
-  //     // Query where sender is the userId
-  //     final QuerySnapshot senderQuery =
-  //         await chatCollection.where('sender', isEqualTo: receiverId).get();
-  //
-  //     // Combine the results, removing duplicates
-  //     final List<DocumentSnapshot> allDocs = [];
-  //
-  //     // Add receiver documents
-  //     allDocs.addAll(receiverQuery.docs);
-  //     allDocs.addAll(senderQuery.docs);
-  //     if (allDocs.isNotEmpty) {
-  //       List<Chat> messages = List.generate(
-  //           allDocs.length,
-  //           (index) =>
-  //               Chat.fromMap(allDocs[index].data() as Map<String, dynamic>));
-  //
-  //       messages.sort((a, b) => b.dateTime.compareTo(a.dateTime));
-  //       return messages;
-  //     }
-  //     return [];
-  //   } catch (e) {
-  //     throw e.toString();
-  //   }
-  // }
 
   Future<List<User>> getContacts({required String userId}) async {
     try {

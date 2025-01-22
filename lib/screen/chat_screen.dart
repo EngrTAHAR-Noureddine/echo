@@ -9,8 +9,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChatScreen extends StatelessWidget {
-  factory ChatScreen({Key? key, required String receiverId}) {
-    ChatController controller = ChatController(receiverId: receiverId);
+  factory ChatScreen(
+      {Key? key,
+      required String receiverId,
+      required String displayName,
+      required bool isUserActive}) {
+    ChatController controller = ChatController(
+        receiverId: receiverId,
+        displayName: displayName,
+        isUserActive: isUserActive);
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
     return ChatScreen._(key: key, controller: controller);
@@ -64,6 +71,7 @@ class ChatScreen extends StatelessWidget {
       ),
       body: Card(
         elevation: 0,
+        margin: EdgeInsets.symmetric(horizontal: 8),
         child: BlocBuilder<ChatBloc, ChatState>(
             bloc: controller.chatBloc,
             builder: (context, state) {
@@ -87,54 +95,61 @@ class ChatScreen extends StatelessWidget {
                 List<ReceiverMessages> receiverMessages =
                     state.receiverMessages;
                 if (receiverMessages.isNotEmpty) {
-                  List<Chat> chats = receiverMessages.first.messages;
+                  List<Chat> chats =
+                      receiverMessages.first.messages.reversed.toList();
                   controller.nameReceiver.setState(
                       newState: receiverMessages.first.user?.displayName ??
                           receiverMessages.first.receiver);
                   controller.isActive.setState(
                       newState: receiverMessages.first.user?.isActive == true);
 
-                  return ListView(
+                  return SingleChildScrollView(
                     reverse: true,
-                    children: List.generate(
-                        chats.length,
-                        (index) => BubbleChat(
-                              message: chats[index],
-                            )),
+                    child: Column(
+                      children: List.generate(
+                          chats.length,
+                          (index) => BubbleChat(
+                                message: chats[index],
+                              )),
+                    ),
                   );
                 }
               }
               return Container();
             }),
       ),
-      bottomNavigationBar: Container(
-        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-        child: TextField(
-          controller: controller.messageController,
-          decoration: InputDecoration(
-              suffixIcon: BlocListener<ChatBloc, ChatState>(
-            bloc: controller.sendChatBloc,
-            listener: (context, state) {
-              if (state is ChatSentSuccessfully) {
-                controller.messageController.clear();
-              } else if (state is ChatError) {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(
-                    state.message,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onError),
-                  ),
-                  backgroundColor: Theme.of(context).colorScheme.error,
-                ));
-              }
-            },
-            child: IconButton(
-                onPressed: () => controller.sendMessage(),
-                icon: Icon(
-                  Icons.send,
-                  color: Theme.of(context).colorScheme.primary,
-                )),
-          )),
+      bottomNavigationBar: Padding(
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+          child: TextField(
+            controller: controller.messageController,
+            decoration: InputDecoration(
+                suffixIcon: BlocListener<ChatBloc, ChatState>(
+              bloc: controller.sendChatBloc,
+              listener: (context, state) {
+                if (state is ChatSentSuccessfully) {
+                  controller.messageController.clear();
+                } else if (state is ChatError) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(
+                      state.message,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onError),
+                    ),
+                    backgroundColor: Theme.of(context).colorScheme.error,
+                  ));
+                }
+              },
+              child: IconButton(
+                  onPressed: () => controller.sendMessage(),
+                  icon: Icon(
+                    Icons.send,
+                    color: Theme.of(context).colorScheme.primary,
+                  )),
+            )),
+          ),
         ),
       ),
     );

@@ -22,6 +22,12 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<GetMessagesEvent>(_getMessages);
     on<SetSuccess>(_setSuccess);
     on<SetFailure>(_setFailure);
+    on<StopReceiveMessagesEvent>(_stopReceiveMessages);
+  }
+  void _stopReceiveMessages(
+      StopReceiveMessagesEvent event, Emitter<ChatState> emit) {
+    _chatSubscription = null;
+    emit(ChatInitial());
   }
 
   Future<void> _sendMessage(
@@ -35,13 +41,15 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     }
   }
 
-  Future<void> _setSuccess(SetSuccess event, Emitter<ChatState> emit) async =>
+  void _setSuccess(SetSuccess event, Emitter<ChatState> emit) =>
       emit(ChatsSuccess(receiverMessages: event.receiverMessages));
-  Future<void> _setFailure(SetFailure event, Emitter<ChatState> emit) async =>
+
+  void _setFailure(SetFailure event, Emitter<ChatState> emit) =>
       emit(ChatError(message: event.message));
 
   Future<void> _getMessages(
       GetMessagesEvent event, Emitter<ChatState> emit) async {
+    emit(ChatLoading());
     try {
       Stream<List<Chat>> chatStream = event.receiverId != null
           ? _chatRepository.getMessages(receiverId: event.receiverId!)
@@ -61,16 +69,16 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       }, onError: (error) {
         add(SetFailure(message: error.toString()));
       }, onDone: () {
-        _chatSubscription?.cancel();
+        add(SetSuccess(receiverMessages: []));
       });
     } catch (e) {
       emit(ChatError(message: e.toString()));
     }
   }
 
-  @override
-  Future<void> close() {
-    _chatSubscription?.cancel(); // Cancel the subscription
-    return super.close();
-  }
+  // @override
+  // Future<void> close() {
+  //   _chatSubscription?.cancel(); // Cancel the subscription
+  //   return super.close();
+  // }
 }

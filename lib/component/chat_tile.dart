@@ -12,8 +12,11 @@ class ChatTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
-        Navigator.of(context).pushNamed(NavigationRoutes.chat,
-            arguments: receiverMessage.receiver);
+        Navigator.of(context).pushNamed(NavigationRoutes.chat, arguments: [
+          receiverMessage.receiver,
+          receiverMessage.user?.displayName,
+          receiverMessage.user?.isActive == true
+        ]);
       },
       leading: CircleAvatar(
         backgroundColor: Colors.grey,

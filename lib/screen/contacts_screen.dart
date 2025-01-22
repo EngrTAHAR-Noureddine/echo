@@ -7,8 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ContactsScreen extends StatelessWidget {
-  factory ContactsScreen({Key? key}) {
-    ContactsController controller = ContactsController();
+  factory ContactsScreen({Key? key, required UserBloc userBloc}) {
+    ContactsController controller = ContactsController(userBloc: userBloc);
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
     return ContactsScreen._(key: key, controller: controller);
@@ -44,15 +44,13 @@ class ContactsScreen extends StatelessWidget {
                   );
                 } else if (state is UsersSuccess) {
                   List<User> users = state.users;
-                  return ListView.separated(
-                      itemCount: users.length,
-                      separatorBuilder: (context, state) => SizedBox(
-                            width: 8,
-                            height: 8,
-                          ),
-                      itemBuilder: (context, index) => ContactTile(
-                            user: users[index],
-                          ));
+                  return Column(
+                    children: List.generate(
+                        users.length,
+                        (index) => ContactTile(
+                              user: users[index],
+                            )),
+                  );
                 }
 
                 return Container();

@@ -6,15 +6,22 @@ import 'package:flutter/material.dart';
 
 class ChatController {
   final String receiverId;
+  final String displayName;
+  final bool isUserActive;
 
-  ChatController({required this.receiverId}) {
+  ChatController(
+      {required this.receiverId,
+      required this.displayName,
+      required this.isUserActive}) {
     getMessages();
+    nameReceiver = MainState<String>(displayName);
+    isActive = MainState<bool>(isUserActive);
   }
 
   final ChatBloc chatBloc = ChatBloc();
   final ChatBloc sendChatBloc = ChatBloc();
-  final MainState<String?> nameReceiver = MainState<String?>(null);
-  final MainState<bool> isActive = MainState<bool>(false);
+  late MainState<String> nameReceiver;
+  late MainState<bool> isActive;
   final TextEditingController messageController = TextEditingController();
 
   void getMessages() => chatBloc.add(GetMessagesEvent(receiverId: receiverId));
