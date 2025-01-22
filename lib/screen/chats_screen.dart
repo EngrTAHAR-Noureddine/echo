@@ -1,6 +1,6 @@
 import 'package:echo/bloc/bloc/chat/chat_bloc.dart';
 import 'package:echo/component/chat_tile.dart';
-import 'package:echo/controller/ChatsController.dart';
+import 'package:echo/controller/chats_controller.dart';
 import 'package:echo/model/receiver_messages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
