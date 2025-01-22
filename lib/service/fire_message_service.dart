@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:echo/constant/constant.dart';
 import 'package:echo/constant/screen_routes.dart';
 import 'package:echo/firebase_options.dart';
@@ -26,7 +25,6 @@ class FireMessageService {
   static final instance = FireMessageService._();
 
   String? fcmToken;
-  final Dio dio = Dio();
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
 
   Future<void> init() async {
