@@ -1,3 +1,4 @@
+import 'package:echo/constant/app_color.dart';
 import 'package:echo/constant/screen_routes.dart';
 import 'package:echo/model/receiver_messages.dart';
 import 'package:echo/utils/extensions.dart';
@@ -19,7 +20,9 @@ class ChatTile extends StatelessWidget {
         ]);
       },
       leading: CircleAvatar(
-        backgroundColor: Colors.grey,
+        backgroundColor: receiverMessage.user?.isActive == true
+            ? AppColor.lightGreen
+            : AppColor.lightGrey03,
       ),
       title: Text(
         "${receiverMessage.user?.displayName}",
