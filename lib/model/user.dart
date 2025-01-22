@@ -26,6 +26,12 @@ class User {
         "email": email,
         "isActive": "$isActive"
       };
+
+  User copy({bool? activate}) => User(
+      id: id,
+      email: email,
+      displayName: displayName,
+      isActive: activate ?? isActive);
 }
 
 class UserAdapter extends TypeAdapter<User> {

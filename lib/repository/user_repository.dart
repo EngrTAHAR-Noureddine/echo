@@ -14,11 +14,7 @@ class UserRepository {
 
   Future<User> getOwnUser({required String id}) async {
     User user = await getUser(id: id);
-
     await HiveBase.hiveBase.setUser(user);
-
-    await setIsActive();
-
     return user;
   }
 
@@ -30,10 +26,10 @@ class UserRepository {
   Future<List<User>> getContacts() async =>
       await _service.getContacts(userId: AppSingleton.instance.user?.id ?? "");
 
-  Future<bool> setIsActive() async {
-    if (AppSingleton.instance.user != null) {
-      return await _service.setIsActive(user: AppSingleton.instance.user!);
-    }
-    return false;
-  }
+  // Future<bool> setIsActive() async {
+  //   if (AppSingleton.instance.user != null) {
+  //     return await _service.setIsActive(user: AppSingleton.instance.user!);
+  //   }
+  //   return false;
+  // }
 }

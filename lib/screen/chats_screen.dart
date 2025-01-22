@@ -7,8 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChatsScreen extends StatelessWidget {
-  factory ChatsScreen({Key? key}) {
-    ChatsController controller = ChatsController();
+  factory ChatsScreen({Key? key, required ChatBloc chatBloc}) {
+    ChatsController controller = ChatsController(chatBloc: chatBloc);
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
     return ChatsScreen._(key: key, controller: controller);
@@ -41,15 +41,13 @@ class ChatsScreen extends StatelessWidget {
               );
             } else if (state is ChatsSuccess) {
               List<ReceiverMessages> receiverMessages = state.receiverMessages;
-              return ListView.separated(
-                  itemCount: receiverMessages.length,
-                  separatorBuilder: (context, state) => SizedBox(
-                        width: 8,
-                        height: 8,
-                      ),
-                  itemBuilder: (context, index) => ChatTile(
-                        receiverMessage: receiverMessages[index],
-                      ));
+              return Column(
+                children: List.generate(
+                    receiverMessages.length,
+                    (index) => ChatTile(
+                          receiverMessage: receiverMessages[index],
+                        )),
+              );
             }
 
             return Container();

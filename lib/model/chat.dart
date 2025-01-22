@@ -37,4 +37,12 @@ class Chat {
         "dateTime": dateTime.toIso8601String(),
         "isDelivered": "$isDelivered"
       };
+
+  copy({bool? readIt, bool? deliveredIt}) => Chat(
+      sender: sender,
+      receiver: receiver,
+      message: message,
+      isRead: readIt ?? isRead,
+      dateTime: dateTime,
+      isDelivered: deliveredIt ?? isDelivered);
 }

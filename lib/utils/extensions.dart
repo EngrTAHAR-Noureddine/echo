@@ -42,7 +42,7 @@ extension Converter on List<Chat> {
       final receiver = entry.key;
       final messages = entry.value;
       messages.sort((a, b) => b.dateTime.compareTo(a.dateTime)); // Sort by date
-      final lastMessage = messages.last; // Get the last message
+      final lastMessage = messages.first; // Get the last message
 
       return ReceiverMessages(
         receiver: receiver,
@@ -53,5 +53,7 @@ extension Converter on List<Chat> {
   }
 
   List<Chat> get unreadMessages => where((chat) =>
+      chat.receiver == AppSingleton.instance.user?.id && !chat.isRead).toList();
+  List<Chat> get unDeliveredMessages => where((chat) =>
       chat.receiver == AppSingleton.instance.user?.id && !chat.isRead).toList();
 }

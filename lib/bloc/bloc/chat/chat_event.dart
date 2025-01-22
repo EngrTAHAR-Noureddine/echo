@@ -17,6 +17,8 @@ class SetSuccess extends ChatEvent {
   SetSuccess({required this.receiverMessages});
 }
 
+class StopReceiveMessagesEvent extends ChatEvent {}
+
 class SetFailure extends ChatEvent {
   final String message;
   SetFailure({required this.message});

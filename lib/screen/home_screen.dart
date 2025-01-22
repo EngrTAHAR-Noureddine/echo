@@ -64,10 +64,11 @@ class HomeScreen extends StatelessWidget {
                           color: Theme.of(context).colorScheme.onSecondary,
                         ),
                       ),
-                      body: controller.bodies[currentIndex],
+                      body: SingleChildScrollView(
+                        child: controller.bodies[currentIndex],
+                      ),
                       bottomNavigationBar: BottomNavigationBar(
-                          onTap: (val) =>
-                              controller.selectedIndex.setState(newState: val),
+                          onTap: (val) => controller.onTap(value: val),
                           currentIndex: currentIndex,
                           items: [
                             BottomNavigationBarItem(
