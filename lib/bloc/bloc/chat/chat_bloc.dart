@@ -43,17 +43,12 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   Future<void> _getMessages(
       GetMessagesEvent event, Emitter<ChatState> emit) async {
     try {
-      print("_getMessages begin");
       Stream<List<Chat>> chatStream = event.receiverId != null
           ? _chatRepository.getMessages(receiverId: event.receiverId!)
           : _chatRepository.getOwnMessages();
-      print("_getMessages after chatStream");
       _chatSubscription = chatStream.listen((chats) async {
-        print("[_chatSubscription] chats : ${chats.length}");
         List<ReceiverMessages> receiverMessages =
             chats.convertChatsToReceiverMessages;
-        print(
-            "[_chatSubscription] receiverMessages : ${receiverMessages.length}");
 
         if (receiverMessages.isNotEmpty) {
           for (var element in receiverMessages) {
@@ -61,8 +56,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
             element.user = user;
           }
         }
-        print(
-            "[_chatSubscription] receiverMessages.isNotEmpty : ${receiverMessages.isNotEmpty}");
+
         add(SetSuccess(receiverMessages: receiverMessages));
       }, onError: (error) {
         add(SetFailure(message: error.toString()));

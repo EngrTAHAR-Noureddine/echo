@@ -4,4 +4,8 @@ class ChatsController {
   final ChatBloc chatBloc = ChatBloc();
 
   void getChats() => chatBloc.add(GetMessagesEvent(receiverId: null));
+
+  ChatsController() {
+    getChats();
+  }
 }
